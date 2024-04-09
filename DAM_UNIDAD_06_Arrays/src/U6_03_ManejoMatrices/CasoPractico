@@ -1,0 +1,13 @@
+Realizar una aplicación que permita simular un tablero de ajedrez a través de un array de dos
+dimensiones:
+
+   Crear el tablero poniendo en las casillas blanca una B y en las negras una N
+   Imprimir el resultado (algo como lo que sigue): 
+    NBNBNBNB
+    BNBNBNBN
+    NBNBNBNB
+    BNBNBNBN
+    NBNBNBNB
+    BNBNBNBN
+    NBNBNBNB
+    BNBNBNBN

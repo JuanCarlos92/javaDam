@@ -1,0 +1,15 @@
+Crear una clase a través de arrays que simule una PILA (LIFO) de información.
+
+Una pila nos permite almacenar y recuperar datos en memoria. Sigue la política LIFO (Último
+en Entrar Primero en Salir).
+
+En este ejercicio se pide implementar una clase que modele el comportamiento de una pila
+de enteros, a través de arrays. La clase debe permitirnos las siguientes funciones:
+
+ Crear la pila vacía.
+ Insertar elementos.
+ Extraer elementos.
+ Debe haber un método para saber si pila está vacía.
+ Un método para saber si la pila está llena.
+ Un método que nos indique el número de elementos actual de la pila.
+ Método que imprima todos los elementos de la pila 

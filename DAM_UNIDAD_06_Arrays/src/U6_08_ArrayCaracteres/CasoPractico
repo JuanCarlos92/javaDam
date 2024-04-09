@@ -1,0 +1,7 @@
+• Crea un array que contenga las letras de la A a la Z.
+
+• Pedir por teclado números de posiciones que nos permitirán coger la letra de esa posición.
+
+• Si pedimos una posición incorrecta (ej. 100), nos dará un error.
+
+• El proceso finalizará al introducir el -1. Entonces el sistema nos mostrará una cadena con todos los caracteres que hemos ido eligiendo. 

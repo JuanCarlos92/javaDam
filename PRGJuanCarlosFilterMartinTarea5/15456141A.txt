@@ -1,0 +1,5 @@
+1:Tornillo:700:Tornillo pequeño
+2:Tuerca:69:Tuerca para tornillo pequeño
+3:Clavo:100:Clavo de cabeza plana
+4:Alambre:300:Rollo de alambre
+5:Destornillador:30:Destornillador de estrellas

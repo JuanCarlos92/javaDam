@@ -1,0 +1,7 @@
+Realizar una aplicación que lea 10 números por teclado y los guarde en un
+array. Una vez almacenados, la aplicación nos dará los siguientes
+resultados:
+      La media de todos los números positivos introducidos 
+      El mayor de todos los números 
+      El menor de los números introducidos 
+      La cuenta de las veces que se repite cada número.

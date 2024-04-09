@@ -1,0 +1,5 @@
+Crea un array de 10 posiciones de números con valores pedidos por teclado. 
+
+La aplicación también debe mostrar por consola el índice y el valor al que corresponde a esa posición del array.
+
+Para esto programar dos métodos, uno para rellenar valores y otro para mostrar 

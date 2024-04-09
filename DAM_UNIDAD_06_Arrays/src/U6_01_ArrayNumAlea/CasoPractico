@@ -1,0 +1,4 @@
+Este array se rellenará con números aleatorios comprendidos entre 1 y 5000.
+    Solo se guardarán los números aleatorios que sean primos por lo que el array solo
+    contendrá números primos.
+    La aplicación también nos debe decir cuál es el número mayor.
