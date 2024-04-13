@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package UD3_1_if_elseif_switch;
+package UD3_1_if_elseif_y_switch;
 
 import java.awt.BorderLayout;
 
