@@ -38,8 +38,21 @@ public class CuentaAhorro extends Cuenta {
 
     @Override
     public void actualizarSaldo() {
-        this.saldo += this.saldo * interesVariable;
-        System.out.println("El saldo ha sido actualizado con los intereses variables");
+
+        double interes = this.interesVariable;
+        
+        double aumentoSaldo = this.saldo / 5000 * 0.001; //Aumenta en 0.1% por cada 5000 euros de saldo
+        interes += aumentoSaldo;
+        
+        //Actualiza el saldo con el interes calculado
+        this.saldo += this.saldo * interes;
+
+        //Desplazamos la coma 2 posiciones a la derecha
+        double porcentaje = interes *100;
+        //redondeamos a solamente 2 decimales
+        porcentaje = Math.round(porcentaje *100)/100d;
+        
+        System.out.println("El saldo ha sido actualizado con un interes del " + porcentaje + "%");
     }
 
 }

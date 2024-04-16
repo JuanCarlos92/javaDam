@@ -1,0 +1,10 @@
+Construir una clase final llamada matemáticas que incluya los siguientes métodos:
+
+     MaxArray  devuelve el valor máximo de un array
+     MinArray  devuelve el valor mínimo de un array
+     SumArray  devuelve la sumatoria de todos los elementos de un array
+
+El array con el que trabajarán estos métodos lo pasaremos a través de un parámetro.
+
+Esta clase no requerirá de implementación y podremos usarla al estilo de la clase Math
+de Java. 

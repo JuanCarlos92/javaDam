@@ -6,12 +6,6 @@
         <group name="DAM">
             <file>file:/C:/Users/Juan%20Carlos/Documents/JAVA/DAM/Dam_Clases/src/ud4_1_implementacion_clases/Ud4_1_2.java</file>
         </group>
-        <group name="javaDam">
-            <file>file:/C:/Users/Juan%20Carlos/Documents/JAVA/DAM/Dam_Clases/src/ud7_2_interfaces/SerieAleatoria.java</file>
-            <file>file:/C:/Users/Juan%20Carlos/Documents/JAVA/DAM/Dam_Clases/src/ud4_1_implementacion_clases/Ud4_1_2.java</file>
-            <file>file:/C:/Users/Juan%20Carlos/Documents/JAVA/DAM/Dam_Clases/src/ud7_2_interfaces/NewMain.java</file>
-            <file>file:/C:/Users/Juan%20Carlos/Documents/JAVA/DAM/Dam_Clases/src/ud7_2_interfaces/ISerie.java</file>
-            <file>file:/C:/Users/Juan%20Carlos/Documents/JAVA/DAM/Dam_Clases/src/ud7_2_interfaces/SerieSuma.java</file>
-        </group>
+        <group name="javaDam"/>
     </open-files>
 </project-private>

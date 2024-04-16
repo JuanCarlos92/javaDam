@@ -1,0 +1,16 @@
+Necesitamos almacenar los datos de alumnos y profesores de nuestro centro. Los datos a almacenar son:
+
+Alumnos                             |       ProfesoresProfesores
+Nombre                              |       Nombre
+Dni                                 |       Dni
+Curso en que está matriculado       |       Asignatura que imparte
+
+
+La funcionalidad que pretendemos para ambos casos es:
++ Dar de alta a los integrantes
++ Modificar los datos de los integrantes
++ Borrar los datos del integrante
+
+Crear las clases necesarias para poder implementar toda la funcionalidad.
+(los métodos solo llevarán la cabecera, no es necesario implementar la funcionalidad). 
+

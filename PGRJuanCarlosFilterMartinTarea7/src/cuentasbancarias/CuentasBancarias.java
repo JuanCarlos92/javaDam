@@ -16,7 +16,6 @@ public class CuentasBancarias {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-
         //Crear cliente1 
         Cliente cliente1 = new Cliente(1, "Juan Carlos",
                 "Calle Arrecife 23", "699699699");
@@ -29,12 +28,12 @@ public class CuentasBancarias {
         cliente2.setDireccion("Calle La Liberta 13");
         cliente2.setTelefono("688688688");
 
-        //Crear cuenta corriente para cliente1
-        CuentaCorriente cc = new CuentaCorriente(1011, 15000,
+        //Crear CUENTA CORRIENTE para cliente1
+        CuentaCorriente cc = new CuentaCorriente(1011, 4500,
                 cliente1);
 
-        //Crear cuenta corriente para cliente2
-        CuentaAhorro ca = new CuentaAhorro(1022, 28000,
+        //Crear CUENTA AHORRO para cliente2
+        CuentaAhorro ca = new CuentaAhorro(1022, 22000,
                 cliente2, 0.02, 20000);
 
         //Realizar operaciones cuentaCorriente con los metodos
@@ -50,8 +49,8 @@ public class CuentasBancarias {
 
         //Realizar operaciones cuentaAhorro con los metodos 
         try {
-            ca.ingresar(200);  //Depositar
-            ca.retirar(2300);    //retirar
+            ca.ingresar(2500);  //Depositar
+            ca.retirar(200);    //retirar
             ca.actualizarSaldo();         //Actualizar Saldo con interes fijo
             System.out.println("Saldo final en la cuenta Ahorro: " + ca.getSaldo());
 

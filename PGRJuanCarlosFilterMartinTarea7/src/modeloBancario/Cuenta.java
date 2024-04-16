@@ -38,6 +38,8 @@ public abstract class Cuenta {
     }
 
     public double getSaldo() {
+        //redondea el  saldo a dos decimales
+        this.saldo = Math.round(this.saldo *100)/100d;
         return saldo;
     }
 

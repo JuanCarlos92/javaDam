@@ -1,0 +1,1 @@
+ClaseEstatica.NewMain
