@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<BIBLIOTECA>
+  <LIBRO>
+    <TITULO>Fundación</TITULO>
+    <AUTOR>Issac Asimov</AUTOR>
+    <PRECIO moneda="EUR">12</PRECIO>
+  </LIBRO>
+  <LIBRO>
+    <TITULO>El coronel no tiene quien le escriba</TITULO>
+    <AUTOR>Gabriel García Márquez</AUTOR>
+    <PRECIO moneda="EUR">9</PRECIO>
+  </LIBRO>
+  <LIBRO>
+    <TITULO>El club Dumas</TITULO>
+    <AUTOR>Arturo Pérez Reverte</AUTOR>
+    <PRECIO moneda="DOLLAR">3</PRECIO>
+  </LIBRO>
+</BIBLIOTECA>
+
