@@ -39,8 +39,8 @@ public class Ventana extends javax.swing.JFrame {
         salirBt = new javax.swing.JButton();
         modificarBt = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
-        jButton1 = new javax.swing.JButton();
+        mensajeTa = new javax.swing.JTextArea();
+        mostrarBt = new javax.swing.JButton();
         mensajeLb = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -73,16 +73,31 @@ public class Ventana extends javax.swing.JFrame {
         });
 
         borrarBt.setText("Borrar");
+        borrarBt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                borrarBtActionPerformed(evt);
+            }
+        });
 
         salirBt.setText("Salir");
 
         modificarBt.setText("Modificar");
+        modificarBt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                modificarBtActionPerformed(evt);
+            }
+        });
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        mensajeTa.setColumns(20);
+        mensajeTa.setRows(5);
+        jScrollPane1.setViewportView(mensajeTa);
 
-        jButton1.setText("jButton1");
+        mostrarBt.setText("Mostrar");
+        mostrarBt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mostrarBtActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -115,7 +130,7 @@ public class Ventana extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 353, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(mostrarBt, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(mensajeLb, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGap(34, 34, 34))
@@ -150,7 +165,7 @@ public class Ventana extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(borrarBt)
                     .addComponent(salirBt)
-                    .addComponent(jButton1)
+                    .addComponent(mostrarBt)
                     .addComponent(mensajeLb))
                 .addContainerGap(39, Short.MAX_VALUE))
         );
@@ -159,18 +174,54 @@ public class Ventana extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void insertarBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_insertarBtActionPerformed
-        // TODO add your handling code here:
         
-        Articulos a = new Articulos(Integer.parseInt(codigoTf.getText()),nombreTf.getText(), Integer.parseInt(precioTf.getText()), descripcionTf.getText());
+        Articulos art = new Articulos(Integer.parseInt(this.codigoTf.getText()), this.nombreTf.getText(), Integer.parseInt(this.precioTf.getText()), this.descripcionTf.getText());
         
         DBArticulos db = new DBArticulos();
         
-        String mensaje = db.alta(a);
+        String mensaje = db.alta(art);
         
-        mensajeLb.setText(mensaje);
-                
+        this.mensajeLb.setText(mensaje);
         
+
     }//GEN-LAST:event_insertarBtActionPerformed
+
+    private void mostrarBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mostrarBtActionPerformed
+        
+        DBArticulos db = new DBArticulos();
+        String mensaje = db.mostrar();
+        
+       // this.mensajeTa.setText("");
+       //método .append --> añade al textarea
+        this.mensajeTa.setText(mensaje);
+    }//GEN-LAST:event_mostrarBtActionPerformed
+
+    private void borrarBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_borrarBtActionPerformed
+        int codigo = Integer.parseInt(this.codigoTf.getText());
+        DBArticulos db = new DBArticulos();
+        String mensaje = db.borrar(codigo);
+        
+        this.mensajeLb.setText(mensaje);
+        
+        //Borra  tambien la lista del textArea generada con mostrar
+        String mensajeMostrar = db.mostrar();
+
+        this.mensajeTa.setText(mensajeMostrar);
+    }//GEN-LAST:event_borrarBtActionPerformed
+
+    private void modificarBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modificarBtActionPerformed
+        int codigo = Integer.parseInt(this.codigoTf.getText());
+        DBArticulos db = new DBArticulos();
+        String mensaje = db.modificar(codigo, this.nombreTf.getText(),Integer.parseInt(this.precioTf.getText()), this.descripcionTf.getText());
+        
+        //Mostramos el mensaje si se ha modificado o no
+        this.mensajeLb.setText(mensaje);
+        
+        //Borra  tambien la lista del textArea generada con mostrar
+        String mensajeMostrar = db.mostrar();
+
+        this.mensajeTa.setText(mensajeMostrar);
+    }//GEN-LAST:event_modificarBtActionPerformed
 
     /**
      * @param args the command line arguments
@@ -214,11 +265,11 @@ public class Ventana extends javax.swing.JFrame {
     private javax.swing.JLabel descripcionLb;
     private javax.swing.JTextField descripcionTf;
     private javax.swing.JButton insertarBt;
-    private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JLabel mensajeLb;
+    private javax.swing.JTextArea mensajeTa;
     private javax.swing.JButton modificarBt;
+    private javax.swing.JButton mostrarBt;
     private javax.swing.JLabel nombreLb;
     private javax.swing.JTextField nombreTf;
     private javax.swing.JLabel precioLb;

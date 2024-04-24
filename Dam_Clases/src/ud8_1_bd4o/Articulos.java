@@ -16,6 +16,7 @@ public class Articulos {
     private String Descripcion;
 
     public Articulos() {
+
     }
 
     public Articulos(int codigo, String nombre, int precio, String Descripcion) {
@@ -41,7 +42,7 @@ public class Articulos {
         this.nombre = nombre;
     }
 
-    public double getPrecio() {
+    public int getPrecio() {
         return precio;
     }
 
