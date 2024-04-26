@@ -4,7 +4,7 @@
  */
 package ui;
 
-import gestion.GestorBD;
+import gestion.*;
 import javax.swing.JOptionPane;
 import modelo.Articulos;
 
@@ -70,6 +70,11 @@ public class VentanaUI extends javax.swing.JFrame {
         modificarBt.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
         modificarBt.setText("MODIFICAR");
         modificarBt.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        modificarBt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                modificarBtActionPerformed(evt);
+            }
+        });
 
         borrarBt.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
         borrarBt.setText("BORRAR");
@@ -102,9 +107,8 @@ public class VentanaUI extends javax.swing.JFrame {
         descripcionLb.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         descripcionLb.setText("Descripción");
 
-        mensajeLb.setFont(new java.awt.Font("Segoe UI", 2, 14)); // NOI18N
+        mensajeLb.setFont(new java.awt.Font("Segoe UI", 2, 18)); // NOI18N
         mensajeLb.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        mensajeLb.setText("jLabel2");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -185,10 +189,20 @@ public class VentanaUI extends javax.swing.JFrame {
         salirBt.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
         salirBt.setText("SALIR");
         salirBt.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        salirBt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                salirBtActionPerformed(evt);
+            }
+        });
 
         mostrarBt.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
         mostrarBt.setText("MOSTRAR");
         mostrarBt.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        mostrarBt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mostrarBtActionPerformed(evt);
+            }
+        });
 
         mensajeTa.setColumns(20);
         mensajeTa.setRows(5);
@@ -253,66 +267,112 @@ public class VentanaUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void insertarBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_insertarBtActionPerformed
-        //Objeto Articulos que recoge por parámetros los textField de la ventana
-        Articulos art = new Articulos(Integer.parseInt(this.codigoTf.getText()), this.nombreTf.getText(), Integer.parseInt(this.cantidadTf.getText()), this.descripcionTf.getText());
-
         GestorBD bd = new GestorBD();
 
-        //Se llama al método insert para insertar el articulo y el mensaje que 
-        //retorna se almacena en la variable mensaje
-        String mensaje = bd.insert(art);
+        String msg = ControladorErrores.controlarCamposVacios(this.codigoTf.getText(), this.nombreTf.getText(), this.cantidadTf.getText(), this.descripcionTf.getText());
 
-        //mostramos el mensaje en el label y reiniciamos los campos TextField
-        this.mensajeLb.setText(mensaje);
-        limpiarCampos();
+        if (msg == null) {
+            //Objeto Articulos que recoge por parámetros los textField de la ventana
+            Articulos art = new Articulos(Integer.parseInt(this.codigoTf.getText()), this.nombreTf.getText(), Integer.parseInt(this.cantidadTf.getText()), this.descripcionTf.getText());
+
+            //Se llama al método insert para insertar el articulo y el mensaje que 
+            //retorna se almacena en la variable mensaje
+            bd.insertar(art);
+
+            //mostramos el mensaje en el label y reiniciamos los campos TextField
+            limpiarCampos();
+        } else {
+            ControladorErrores.ErrorshowDialog(msg);
+        }
+
 
     }//GEN-LAST:event_insertarBtActionPerformed
+
 
     private void buscarBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buscarBtActionPerformed
 
         GestorBD bd = new GestorBD();
-        //Se llama al metodo select que devuelve un objeto
-        Articulos articuloEncontrado = bd.select(Integer.parseInt(this.codigoTf.getText()));
+        String msg = ControladorErrores.controlarCampoCodigo(this.codigoTf.getText());
 
-        //Si no es null entonces rellena los campos restante TextFiel del articulo
-        if (articuloEncontrado != null) {
-            this.mensajeLb.setText("Se ha encontrado el artículo");
+        if (msg == null) {
+            //Se llama al metodo buscar que devuelve un objeto
+            Articulos articuloEncontrado = bd.buscar(Integer.parseInt(this.codigoTf.getText()));
 
-            this.nombreTf.setText(articuloEncontrado.getNombre());
-            this.cantidadTf.setText(Integer.toString(articuloEncontrado.getCantidad()));
-            this.descripcionTf.setText(articuloEncontrado.getDescripcion());
+            //Si (articuloEncontrado no es null) entonces rellena los campos restante TextFiel del articulo
+            if (articuloEncontrado != null) {
+                this.mensajeLb.setText("Se ha encontrado el artículo");
 
-            //Si es null entonces reinicia los campos TextField y envia un mensaje de error
+                this.nombreTf.setText(articuloEncontrado.getNombre());
+                this.cantidadTf.setText(Integer.toString(articuloEncontrado.getCantidad()));
+                this.descripcionTf.setText(articuloEncontrado.getDescripcion());
+
+                //Si (articuloEncontrado es null) entonces reinicia los campos TextField y envia un mensaje de error
+            } else {
+                limpiarCampos();
+                ControladorErrores.ErrorshowDialog("Ese código de artículo no está resgistrado");
+            }
         } else {
+            ControladorErrores.ErrorshowDialog(msg);
             limpiarCampos();
-            ErrorshowDialog("Ese código de artículo no está resgistrado");
         }
+
 
     }//GEN-LAST:event_buscarBtActionPerformed
 
     private void borrarBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_borrarBtActionPerformed
-        //Se recoge el codigo del TextField en la variable codigo
-        int codigo = Integer.parseInt(this.codigoTf.getText());
+
         GestorBD bd = new GestorBD();
 
-        if () {
-            
-        }
-        
-        //Se llama al metodo delete para borrar el articulo si se encuentra en 
-        //la BD y el mensaje que retorna se almacena en la variable mensaje
-        String mensaje = bd.delete(codigo);
-        
-        //mostramos el mensaje en el label y reiniciamos los campos TextField
-        this.mensajeLb.setText(mensaje);
-        limpiarCampos();
-        
-        //Borra tambien la lista del textArea generada con mostrar
-        String msgMostrar = bd.view();
-        this.mensajeTa.setText(msgMostrar);
+        String msg = ControladorErrores.controlarCampoCodigo(this.codigoTf.getText());
 
+        if (msg == null) {
+            //llamada al metodo borrar pasandole por parámetros el codigo del TextField
+            bd.borrar(Integer.parseInt(this.codigoTf.getText()));
+
+            //reiniciamos los campos TextField
+            limpiarCampos();
+
+            //Borra tambien el articulo en la lista del textArea generada con mostrar
+            this.mensajeTa.setText(bd.mostrar());
+        } else {
+            ControladorErrores.ErrorshowDialog(msg);
+            limpiarCampos();
+        }
 
     }//GEN-LAST:event_borrarBtActionPerformed
+
+    private void mostrarBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mostrarBtActionPerformed
+        GestorBD db = new GestorBD();
+        //llamamos al metodo mostrar y se almacena en mensaje
+        String mensaje = db.mostrar();
+
+        //método .append --> añade al textarea
+        //MÉTODO .setText --> sobreescribe 
+        this.mensajeTa.setText(mensaje);
+    }//GEN-LAST:event_mostrarBtActionPerformed
+
+    private void modificarBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modificarBtActionPerformed
+        GestorBD bd = new GestorBD();
+
+        String msg = ControladorErrores.controlarCamposVacios(this.codigoTf.getText(), this.nombreTf.getText(), this.cantidadTf.getText(), this.descripcionTf.getText());
+
+        if (msg == null) {
+            int codigo = Integer.parseInt(this.codigoTf.getText());
+            
+            //llamamos al metodo actualizar pasandole por parámetros los TextField
+            bd.actualizar(codigo, this.nombreTf.getText(), Integer.parseInt(this.cantidadTf.getText()), this.descripcionTf.getText());
+
+            //Modifica tambien el articulo en la lista del textArea generada con mostrar
+            //String mensajeMostrar = bd.mostrar();
+            this.mensajeTa.setText(bd.mostrar());
+        } else {
+            ControladorErrores.ErrorshowDialog(msg);
+        }
+    }//GEN-LAST:event_modificarBtActionPerformed
+
+    private void salirBtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salirBtActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_salirBtActionPerformed
 
     /**
      * @param args the command line arguments
@@ -351,6 +411,9 @@ public class VentanaUI extends javax.swing.JFrame {
 
     }
 
+    /**
+     * Metodo para limpiar los campos
+     */
     private void limpiarCampos() {
         this.codigoTf.setText("");
         this.nombreTf.setText("");
@@ -358,10 +421,6 @@ public class VentanaUI extends javax.swing.JFrame {
         this.descripcionTf.setText("");
     }
 
-    public void ErrorshowDialog(String msg) {
-        JOptionPane.showMessageDialog(null, msg,
-                "Error", JOptionPane.ERROR_MESSAGE);
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton borrarBt;

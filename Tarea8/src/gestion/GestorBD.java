@@ -8,9 +8,6 @@ import modelo.Articulos;
 import com.db4o.Db4oEmbedded;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
-import com.db4o.query.Query;
-import java.io.Closeable;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -19,198 +16,237 @@ import javax.swing.JOptionPane;
 public class GestorBD {
 
     private ObjectContainer bd;
-    final private String URL_BD = "productos.yap";
+    final private String URL_BD = "Tarea8.yap";
 
     /**
      * Abrir conexion con la BD pasándole una configuración vacía y la ruta
-     * donde se va a almacenar la BD
      */
-    public void conectionBD() {
+    public void conectarBD() {
         try {
             bd = Db4oEmbedded.openFile(
                     Db4oEmbedded.newConfiguration(), URL_BD);
         } catch (Exception e) {
-            ErrorshowDialog("Ha habido un error al conectar con la base de datos\n" + e.getMessage());
+            ControladorErrores.ErrorshowDialog("Ha habido un error al conectar con la base de datos\n" + e.getMessage());
         }
 
     }
 
     /**
-     * Inserta un artículo en la Base de Datos
+     * Inserta un artículo en la BD
      *
      * @param articulo
-     * @return
      */
-    public String insert(Articulos articulo) {
-        //variable que almacena el codigo del articulo
-        boolean existeCod = ComprobarSiExisteArticulo(articulo.getCodigo());
+    public void insertar(Articulos articulo) {
+
         try {
-            //si existeCodigo (es true)
-            if (existeCod) {
-                return " Este codigo de articulo ya existe";
+            //si existe el codigo de articulo (es true)... indicamos que ya existe
+            if (ComprobarSiExisteArticulo(articulo.getCodigo())) {
+                ControladorErrores.ErrorshowDialog(" Este codigo de articulo ya existe");
+                return;
             }
-            //sino existe....(es false)
-            //Establecemos conexión con la BD, añadimos el articulo y cerramos la conexión
-            conectionBD();
+
+            //Conectamos con la BD
+            conectarBD();
+            //sino existe(es false)... añadimos el articulo 
             bd.store(articulo);
-            bd.close();
-            return "El articulo se ha insertado correctamente";
+            ControladorErrores.InfoshowDialog("El articulo se ha insertado correctamente");
 
         } catch (Exception e) {
-            return "Ha ocurrido un error";
+            ControladorErrores.ErrorshowDialog("Ha habido un error al insertar el artículo en la BD\n" + e.getMessage());
+        } finally {
+            bd.close(); //cerramos conexión con la BD
         }
     }
 
     /**
-     * Busca un articulo a partir de del código introducido
+     * Busca un articulo a partir del código introducido
      *
      * @param codigo
-     * @return el articulo rellenando los campos nombre, cantidad, descripcion
+     * @return el articulo rellenando los campos nombre, cantidad, descripcion o
+     * null si no se encuentra
      */
-    public Articulos select(int codigo) {
-        //Establecemos conexión a la BD, creamos un objeto articulo con el codigo
-        conectionBD();
-        Articulos articuloSelect = new Articulos(codigo, null, 0, null);
+    public Articulos buscar(int codigo) {
+        //Establecemos conexión a la BD
+        conectarBD();
 
-        //llamamos al ObjectSet(coleccion 'parecido a un ArrayList') con nombre resultSelect que recoge el articulo.
-        ObjectSet<Articulos> resultSelect = bd.queryByExample(articuloSelect);
+        try {
+            //llamamos al ObjectSet(coleccion 'parecido a un ArrayList') 
+            //con nombre resultBuscar que recoge el articulo con el codigo.
+            ObjectSet<Articulos> resultBuscar = bd.queryByExample(new Articulos(codigo, null, 0, null));
 
-        //Si no encuentra articulos con ese codigo retorna null.
-        if (resultSelect.isEmpty()) {
-            bd.close();
+            //Si no hay articulo con el codigo retorna null.
+            if (resultBuscar.isEmpty()) {
+                return null;
+
+                //Si hay articulo con el codigo hay articulo con el codigo entonces retorna el contenido.   
+            } else {
+                return resultBuscar.next();
+            }
+
+        } catch (Exception e) {
+            ControladorErrores.ErrorshowDialog("Ha habido un error al buscar el artículo en la BD\n" + e.getMessage());
             return null;
-            //Si resultadoSelect no es vacio entonces retorna el contenido.
-        } else {
-            return resultSelect.next();
-        }
+        } finally {
 
-    }
-
-    public String delete(int codigo) {
-        String resultado;
-        //Establecemos conexión a la BD, creamos un objeto articulo con el codigo
-        conectionBD();
-
-        Articulos articuloDelete = new Articulos(codigo, null, 0, null);
-
-        //llamamos al ObjectSet (coleccion 'parecido a un ArrayList') con nombre resultSelect que recoge el articulo.
-        ObjectSet<Articulos> resultSelec = bd.queryByExample(articuloDelete);
-
-        //Si resultadoConsulta es 0
-        if (resultSelec.isEmpty()) {
-            //cerramos la bd y retornamos que no se encontraron articulos
             bd.close();
-            return "No se han encontrado articulo para borrar";
         }
-        Articulos borrar = resultSelec.next();
-        bd.delete(borrar);
-        resultado = "El articulo se ha borrado correctamente";
 
-        bd.close();
-        return resultado;
     }
 
-    public String update(int codigo, String nombre, int cantidad, String descripcion) {
-        String resultado;
-        //Establecemos conexión a la BD, creamos un objeto articulo con el codigo
-        conectionBD();
+    /**
+     * Borra un articulo a partir del código introducdo
+     *
+     * @param codigo
+     */
+    public void borrar(int codigo) {
 
-        Articulos articuloUpdate = new Articulos(codigo, null, 0, null);
+        //Establecemos conexión a la BD
+        conectarBD();
+        try {
+            //llamamos al ObjectSet (coleccion 'parecido a un ArrayList') 
+            //con nombre resultBuscar que recoge el articulo con el codigo.
+            ObjectSet<Articulos> resultBuscar = bd.queryByExample(new Articulos(codigo, null, 0, null));
 
-        //llamamos al ObjectSet (tipo de arraylist'coleccion') con nombre resultadConsulta que 
-        //recoge el articulo.
-        ObjectSet<Articulos> resultSelect = bd.queryByExample(articuloUpdate);
+            //Si resultBuscar es vacio... cerramos la BD y indicamos que no hay articulos
+            if (resultBuscar.isEmpty()) {
+                ControladorErrores.ErrorshowDialog("No se ha encontrado el articulo referente a ese codigo");
+            } else {
 
-        //Si resultadoConsulta es vacio
-        if (resultSelect.isEmpty()) {
-            //cerramos la bd y retornamos que no se encontraron articulos
-            bd.close();
-            return "No se han encontrado articulo para modificar";
+                int pregunta = ControladorErrores.PreguntashowDialog("¿Estás seguro de que deseas borrar este artículo?", "SI", "NO");
+
+                //Si la pregunta es 0 (significa "SI")... Borramos el articulo de la bd
+                if (pregunta == 0) {
+                    bd.delete(resultBuscar.next());
+                    ControladorErrores.InfoshowDialog("Se ha borrado correctamente");
+
+                    //Si la pregunta no es 0(significa "NO")... No eliminamos el articulo   
+                } else {
+
+                    ControladorErrores.InfoshowDialog("El articulo no se ha eliminado");
+                }
+            }
+        } catch (Exception e) {
+            ControladorErrores.ErrorshowDialog("Ha habido un error al borrar el artículo en la BD\n" + e.getMessage());
+        } finally {
+            bd.close(); //cerramos conexión con la BD
         }
-        //Si resultadoC
-        Articulos art = resultSelect.next();
-        //si nombre no es nulo...
-        if (nombre != null) {
-            art.setNombre(nombre);
-        }
-        //si precio es 0...
-        if (cantidad != 0) {
-            art.setCantidad(cantidad);
-        }
-        //si descripcion es nulo...
-        if (descripcion != null) {
-            art.setDescripcion(descripcion);
 
-        }
-        //Actualizamos el articulo y guardamos el mensaje en resultado
-        bd.store(art);
-        resultado = "El articulo se ha actualizado correctamente";
-
-        //ceramos la BD y retornamos la variable resultado
-        bd.close();
-        return resultado;
     }
 
-    public String view() {
-        String resultado = "";
-        //Establecemos conexión a la BD, creamos un objeto articulo con el codigo
-        conectionBD();
-        Articulos articuloSelec = new Articulos();
+    /**
+     * Actualiza el articulo en la bd
+     *
+     * @param codigo Codigo referente para actualizar el articulo
+     * @param nombre Nombre a modificar
+     * @param cantidad cantidad a modificar
+     * @param descripcion descripcion a modificar
+     */
+    public void actualizar(int codigo, String nombre, int cantidad, String descripcion) {
+        //Establecemos conexión a la BD
+        conectarBD();
+        try {
+            //llamamos al ObjectSet (coleccion 'parecido a un ArrayList')
+            //con nombre resultBuscar que recoge el articulo con el codigo.
+            ObjectSet<Articulos> resultBuscar = bd.queryByExample(new Articulos(codigo, null, 0, null));
 
-        //llamamos al ObjectSet (tipo de arraylist'coleccion') con nombre resultadConsulta que 
-        //recoge el articulo.
-        ObjectSet<Articulos> resultSelec = bd.queryByExample(articuloSelec);
+            //Si resultbuscar es vacio... cerramos la bd y indicamos que  no hay articulos
+            if (resultBuscar.isEmpty()) {
+                ControladorErrores.ErrorshowDialog("No se ha encontrado el articulo para modificar");
+            }
 
-        //Si resultadoConsulta es 0
-        if (resultSelec.isEmpty()) {
-            //ceramos la bd y retornamos que no se encontraron articulos
-            bd.close();
-            return "No se han encontrado articulos";
+            //En cambio si tuviera articulos con el codigo indicado... creamos un objeto articulo del resultBuscar
+            Articulos articulo = resultBuscar.next();
+            //si nombre no es nulo... añadimos el nombre a objeto
+            if (nombre != null) {
+                articulo.setNombre(nombre);
+            }
+
+            //si precio es 0... añadimos el precio a objeto
+            if (cantidad != 0) {
+                articulo.setCantidad(cantidad);
+            }
+
+            //si descripcion es nulo... añadimos la descripcion a objeto
+            if (descripcion != null) {
+                articulo.setDescripcion(descripcion);
+
+            }
+
+            //Actualizamos el articulo, mostramos mensaje de exito y cerramos la BD
+            bd.store(articulo);
+            ControladorErrores.InfoshowDialog("El artículo se ha modificado correctamente");
+
+        } catch (Exception e) {
+            ControladorErrores.ErrorshowDialog("Ha habido un error al actualizar el artículo en la BD\n" + e.getMessage());
+        } finally {
+            bd.close();//cerramos conexión con la BD
         }
-        //si resultadoConsulta es !=0 entra al while para recoger cada articulo 
-        //almacenandolo en la variable resultado y repitiendo el while hasta no obtener más articulos.
-        while (resultSelec.hasNext()) {
 
-            Articulos art = (Articulos) resultSelec.next();
-            resultado = resultado + art.getCodigo() + "\t" + art.getNombre() + "\t"
-                    + art.getCantidad() + "\t" + art.getDescripcion() + "\n";
-
-        }
-        //retornamos el resultado.
-        bd.close();
-        return resultado;
     }
 
-    public ObjectSet<Articulos> consultar(Articulos articulo) {
-        Query consulta = bd.query();
-        consulta.constrain(articulo);
-        ObjectSet<Articulos> resultado = consulta.execute();
-        return resultado;
+    /**
+     * Muestra todos los articulos de la BD
+     *
+     * @return una cadena de texto con toda la informacion
+     */
+    public String mostrar() {
+        //Establecemos conexión a la BD
+        conectarBD();
+        try {
+            String resultado;
+
+            //llamamos al ObjectSet (coleccion 'parecido a un ArrayList') con nombre resultBuscar que recoge el articulo
+            ObjectSet<Articulos> resultBuscar = bd.queryByExample(new Articulos());
+
+            //Si resultBuscar es vacio (no hay articulos)
+            if (resultBuscar.isEmpty()) {
+                //Almacenamos en resultado que no se encontraron articulos
+                resultado = "No se han encontrado articulos en la BD";
+
+            } else {
+                //si resultBuscar no está vacio... entra al while para recoger cada articulo 
+                //almacenandolo en la variable resultado y repitiendo el while hasta no obtener más articulos.
+                resultado = "Números de articulos: " + resultBuscar.size() + "\n";
+                while (resultBuscar.hasNext()) {
+
+                    Articulos art = (Articulos) resultBuscar.next();
+                    resultado = resultado + "\nCódigo: " + art.getCodigo()
+                            + "\nNombre: " + art.getNombre()
+                            + "\nCantidad: " + art.getCantidad()
+                            + "\nDescripción: " + art.getDescripcion() + "\n";
+
+                }
+            }
+            //retornamos el resultado.
+            return resultado;
+
+        } catch (Exception e) {
+            ControladorErrores.ErrorshowDialog("Ha habido un error al mostrar los artículos en la BD\n" + e.getMessage());
+            return null;
+        } finally {
+            bd.close(); //cerramos conexión con la BD
+        }
+
     }
 
+    /**
+     * Comprueba si existe un articulo con el cidog dado en la BD
+     *
+     * @param codigo
+     * @return True si existe, false si no
+     */
     private boolean ComprobarSiExisteArticulo(int codigo) {
+        conectarBD();
+        try {
+            //llamamos al ObjectSet (coleccion 'parecido a un ArrayList') con nombre resultBuscar que recoge el codigo del articulo.
+            ObjectSet<Articulos> resultBuscar = bd.queryByExample(new Articulos(codigo, null, 0, null));
 
-        conectionBD();
-        Articulos articuloConsulta = new Articulos(codigo, null, 0, null);
+            return !resultBuscar.isEmpty();
 
-        //llamamos al ObjectSet (tipo de arraylist'coleccion') con nombre resultadConsulta que 
-        //recoge el codigo del articulo.
-        ObjectSet<Articulos> resultadoConsulta = bd.queryByExample(articuloConsulta);
-
-        //condiconamos que el resultado consulta es o no vacio (lo mismo que size()==0)
-        if (resultadoConsulta.isEmpty()) {
-            //no existe ese articulo con el codigo indicado y retornamos false.
-            bd.close();
-            return false;
+        } finally {
+            bd.close(); //cerramos conexión con la BD
         }
-        //existe entonces retornamos true.
-        bd.close();
-        return true;
-    }
 
-    public void ErrorshowDialog(String msg) {
-        JOptionPane.showMessageDialog(null, msg,
-                "Error", JOptionPane.ERROR_MESSAGE);
     }
 
 }
