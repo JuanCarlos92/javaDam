@@ -279,7 +279,7 @@ public class VentanaUI extends javax.swing.JFrame {
             //retorna se almacena en la variable mensaje
             bd.insertar(art);
 
-            //mostramos el mensaje en el label y reiniciamos los campos TextField
+            //Reiniciamos los campos TextField
             limpiarCampos();
         } else {
             ControladorErrores.ErrorshowDialog(msg);
